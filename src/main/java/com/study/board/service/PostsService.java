@@ -2,12 +2,16 @@ package com.study.board.service;
 
 import com.study.board.domain.posts.Posts;
 import com.study.board.domain.posts.PostsRepository;
+import com.study.board.web.dto.PostsLisResponseDto;
 import com.study.board.web.dto.PostsResponseDto;
 import com.study.board.web.dto.PostsSaveRequestDto;
 import com.study.board.web.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -34,5 +38,10 @@ public class PostsService {
         Posts entity = postsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
 
         return new PostsResponseDto(entity);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostsLisResponseDto> findAllDesc() {
+        return postsRepository.findAllDesc().stream().map(PostsLisResponseDto::new).collect(Collectors.toList());
     }
 }
